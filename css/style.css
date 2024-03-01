@@ -1,5 +1,5 @@
 .body{
-    /*background-color: rgb(255, 191, 127);*/
+    background-color: rgb(255, 191, 127);
     margin: 0 auto;
     max-width: 1080px;
     min-width: 400px;
@@ -11,5 +11,6 @@
 }
 
 .canvas{
+    background-image: url('../assets/images/parking.jpg');
     border: 2px solid black;
 }
