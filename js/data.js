@@ -1,15 +1,8 @@
-
-const width_canvas = 840
-
-const height_canvas = 420
-
-const FPS = 60
-
 // Caracteristica de cada vehiculo
 const DATA_CARS = [
     {
-        type: "ambulance",
-        id: 1,
+        type_name: "ambulance",
+        type: 1,
         img: {
             x: 140,
             y: 0,
@@ -20,8 +13,8 @@ const DATA_CARS = [
         draggable: false
     },
     {
-        type: "sports",
-        id: 2,
+        type_name: "sports",
+        type: 2,
         img: {
             x: 140,
             y: 140,
@@ -32,8 +25,8 @@ const DATA_CARS = [
         draggable: true
     },
     {
-        type: "pickup",
-        id: 3,
+        type_name: "pickup",
+        type: 3,
         img: {
             x: 0,
             y: 0,
@@ -44,8 +37,8 @@ const DATA_CARS = [
         draggable: true
     },
     {
-        type: "truck",
-        id: 4,
+        type_name: "truck",
+        type: 4,
         img: {
             x: 70,
             y: 0,
@@ -56,8 +49,8 @@ const DATA_CARS = [
         draggable: true
     },
     {
-        type: "bus",
-        id: 5,
+        type_name: "bus",
+        type: 5,
         img: {
             x: 70,
             y: 210,
@@ -69,11 +62,17 @@ const DATA_CARS = [
     }
 ]
 
+// Mapa de cada nivel
 const MAPS = [
 
     // NIVEL 1
     [
-
+        [0, 0, 2, 0, 0, 4, 0, 0, 5, 0, 0, 4],
+        [0, 0, 0, 0, 0, 0, 4, 0, 0, 3, 3, 0],
+        [1, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 4, 2, 0, 0, 3, 3, 5, 0, 0],
+        [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0]
     ],
 
     // NIVEL 2
