@@ -6,14 +6,17 @@ let start_x // coordenada x del click
 let start_y // coordenada y del click
 let target // objeto pulsado
 let n = 1 // numero de casillas que se desplaza
+// Mapa de coches (nivel)
+let level = 0
+let map = MAPS[level]
 
 /******************** DIBUJAR OBJETOS ***********************/
 
 // Cargar array vehiculos (objetos) siguiendo el mapa (array)
-const loadMap = (map) => {
+const loadMap = () => {
     let cars = []
-    for (let y = 0; y < map.length - 1; y++) {
-        for (let x = 0; x < map[y].length - 1; x++) {
+    for (let y = 0; y < map.length; y++) {
+        for (let x = 0; x < map[y].length; x++) {
             if (map[y][x]) { // 0 es falsy
                 let car = new Car(map[y][x], x, y)
                 cars.push(car)
@@ -41,11 +44,18 @@ const update = (cars) => {
 }
 
 const run = () => {
-    cars = loadMap(MAPS[0])
+    cars = loadMap(map)
     setInterval(() => update(cars), 1000 / FPS)
 }
 
-/************************** ARRASTRAR Y SOLTAR *****************************/
+// Avanzar ambulancia
+const advance = () => {
+    let ambulance = cars.filter(car => car.type == 1)[0]
+    while (ambulance.move(true)) {}
+}
+
+
+/************************** COGER *****************************/
 
 const checkClick = (x, y, car) => {
     if (
@@ -59,9 +69,7 @@ const checkClick = (x, y, car) => {
     return false
 }
 
-
 const catchHandler = (event) => {
-    isMouseDown = true
     // Coordenadas del click relativas al canvas
     start_x = event.offsetX
     start_y = event.offsetY
@@ -74,10 +82,24 @@ const catchHandler = (event) => {
     // Si ha salido del bucle por llegar al final, acaba la función
     if (i == cars.length) return
     // Asignar target 
-    if (i < cars.length) {
-        target = cars[i]
-        console.log(target)
+    target = cars[i]
+    isMouseDown = true
+}
+
+/************************** ARRASTRAR *****************************/
+
+// Comprobar la celda está libre
+const checkCell = (x, y) => {
+    if (
+        map[y][x] > 0 ||
+        (y > 0 && [3,4].includes(map[y-1][x])) || // verifica si hay un vehiculo vertical arriba
+        (x > 0 && [1,2,5].includes(map[y][x-1])) || // verifica si hay un vehiculo horizontal a la izquierda
+        (y > 1 && map[y-2][x] == 4) || // verifica si hay un vehiculo largo arriba
+        (x > 1 && map[y][x-2] == 5) // verifica si hay un vehiculo largo a la izquierda
+    ) {
+        return false
     }
+    return true
 }
 
 const dragHandler = (event) => {
@@ -90,17 +112,26 @@ const dragHandler = (event) => {
     const dy = mouse_y - start_y
     // Si el objeto seleccionado se puede arrastrar en horizontal
     // y se ha arrastrado una distacia equivalente a una celda en el eje x
-    if (target.drag && target.horizontal && Math.abs(dx) > cell*n) {
-        n++
-        dx > 0 ? target.pos_x++ : target.pos_x--
+    if (
+        target.drag && 
+        target.horizontal && 
+        Math.abs(dx) > cell*n
+    ) {
+        if (target.move(dx > 0 ? true : false))  n++
     }
     // Si el objeto seleccionado se puede arrastrar en vertical
     // y se ha arrastrado una distacia equivalente a una celda en el eje y
-    if (target.drag && !target.horizontal && Math.abs(dy) > cell*n) {
-        n++
-        dy > 0 ? target.pos_y++ : target.pos_y--
+    if (
+        target.drag && 
+        !target.horizontal && 
+        Math.abs(dy) > cell*n
+        
+    ) {
+        if (target.move(dy > 0 ? true : false))  n++
     }
 }
+
+/************************** SOLTAR *****************************/
 
 
 const dropHandler = () => {
@@ -108,7 +139,7 @@ const dropHandler = () => {
         isMouseDown = false
         n = 1 // reset
     }
-    console.log("drop")
+    advance()
 }
 
 /********************************* EVENTOS **********************************/

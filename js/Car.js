@@ -4,16 +4,9 @@ tilecar.setAttribute('src', "./assets/images/tilecar.png")
 // Tiempo del ultimo destello de la sirena
 let lastSiren
 
-/**
- * Class representing a car.
- */
+
 class Car {
-    /**
-     * Create a car.
-     * @param {integer} type
-     * @param {number} pos_x 
-     * @param {number} pos_y 
-     */
+    
     constructor(type, pos_x, pos_y) {
         this.type = type
         // Datos según el tipo de vehiculo
@@ -47,5 +40,47 @@ class Car {
             this.pos_x*cell, this.pos_y*cell, // Coordenades en canvas
             this.w/70*cell, this.h/70*cell // Dimensiones en canvas
         ) 
+    }
+
+    move(direction) {
+        let size// casillas que ocupa en el sentido del movimiento
+        if (direction) { // sentido positivo
+            if (this.horizontal) { // hacia la derecha
+                size = this.w / 70 
+                if (this.pos_x + size < 12 && checkCell(this.pos_x + size, this.pos_y)) {
+                    // actualizar mapa
+                    map[this.pos_y][this.pos_x] =  0 // antigua posicion
+                    map[this.pos_y][this.pos_x+1] =  this.type // nueva posicion
+                    // asignar nueva posicion al objeto
+                    this.pos_x++
+                    return true 
+                }
+            } else { // hacia abajo
+                size = this.h / 70
+                if (this.pos_y + size < 6 && checkCell(this.pos_x, this.pos_y + size)) {
+                    map[this.pos_y][this.pos_x] =  0 
+                    map[this.pos_y+1][this.pos_x] =  this.type 
+                    this.pos_y++
+                    return true 
+                }
+            }         
+        } else { // sentido negativo
+            if (this.horizontal) { // hacia la izquierda
+                if (this.pos_x - 1 >= 0 && checkCell(this.pos_x - 1, this.pos_y)) {
+                    map[this.pos_y][this.pos_x] =  0 
+                    map[this.pos_y][this.pos_x-1] =  this.type 
+                    this.pos_x--
+                    return true 
+                }
+            } else { // hacia arriba
+                if (this.pos_y - 1 >= 0 && checkCell(this.pos_x, this.pos_y - 1)) {
+                    map[this.pos_y][this.pos_x] =  0 
+                    map[this.pos_y-1][this.pos_x] =  this.type 
+                    this.pos_y--
+                    return true 
+                }
+            }
+        }  
+        return false
     }
 }
