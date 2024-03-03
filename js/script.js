@@ -1,16 +1,6 @@
-const width_canvas = 840
-const height_canvas = 420
 const FPS = 60
 
-const removeCanvas = () => {
-    canvas.width = width_canvas
-    canvas.height = height_canvas
-}
-
-const update = (cars) => {
-    removeCanvas()
-    drawCanvas(cars)
-}
+/******************** DIBUJAR OBJETOS ***********************/
 
 // Cargar array vehiculos (objetos) siguiendo el mapa (array)
 const loadMap = (map) => {
@@ -26,20 +16,43 @@ const loadMap = (map) => {
     return cars
 }
 
+const removeCanvas = () => {
+    canvas.width = width_canvas
+    canvas.height = height_canvas
+}
+
+
 const drawCanvas = (cars) => {
     cars.forEach(car => {
         car.draw()
     })
 }
 
+const update = (cars) => {
+    removeCanvas()
+    drawCanvas(cars)
+}
+
 const run = () => {
-    const cars = loadMap(MAPS[0])
+    cars = loadMap(MAPS[0])
     setInterval(() => update(cars), 400)
 }
 
+/************************** ARRASTRAR Y SOLTAR *****************************/
+
+
+
+
+
+
+
 /********************************* EVENTS **********************************/
 
-document.addEventListener("DOMContentLoaded", () => {
-    init()
+document.addEventListener('DOMContentLoaded', () => {
+    initCanvas()
     run()
+    canvas.addEventListener('mousemove', () => console.log("over"))
 })
+
+
+

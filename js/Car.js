@@ -35,13 +35,12 @@ class Car {
             // se alterna el fragmento que se recorta de tilecar
             this.y = this.y === 0 ? 70 : 0
         }
-
         ctx.drawImage(
             tilecar,
             this.x, this.y, // Coordenadas en imagen original
             this.w, this.h, // Dimensiones originales del fragmento
-            this.pos_y*70, this.pos_x*70, // Coordenades en canvas
-            this.w, this.h // Dimensiones en canvas
+            this.pos_y*cell, this.pos_x*cell, // Coordenades en canvas
+            this.w/70*cell, this.h/70*cell // Dimensiones en canvas
         ) 
     }
 }
