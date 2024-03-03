@@ -1,6 +1,8 @@
 
 const tilecar = document.createElement("IMG")
 tilecar.setAttribute('src', "./assets/images/tilecar.png")
+// Tiempo del ultimo destello de la sirena
+let lastSiren
 
 /**
  * Class representing a car.
@@ -20,10 +22,8 @@ class Car {
         this.h = img.h // alto (px)
         this.x = img.x // coordenada x (px)
         this.y = img.y // coordenada y (px)
-        this.o = horizontally // orientación
-        this.drag = draggable // indica si se puede arrastrar
-        // Identificador unico
-        // this.id = pos_x.toString + pos_y.toString
+        this.horizontal = horizontally // orientación horizontal (boolean)
+        this.drag = draggable // indica si se puede arrastrar (boolean)
         // Coordenadas iniciales en array bidimensional, es decir, la referencia para dibujar objetos en el canvas
         this.pos_x = pos_x
         this.pos_y = pos_y
@@ -32,14 +32,19 @@ class Car {
     draw() {
         // Comprobar si es una ambulancia
         if (this.type === 1) {
-            // se alterna el fragmento que se recorta de tilecar
-            this.y = this.y === 0 ? 70 : 0
+            // Comprobar si ha pasado el tiempo suficiente
+            const now = new Date().getTime()
+            if (now - lastSiren > 400 || !lastSiren) {
+                lastSiren = now
+                // Se alterna el fragmento que se recorta de tilecar para el efecto sirena
+                this.y = this.y === 0 ? 70 : 0
+            }
         }
         ctx.drawImage(
             tilecar,
             this.x, this.y, // Coordenadas en imagen original
             this.w, this.h, // Dimensiones originales del fragmento
-            this.pos_y*cell, this.pos_x*cell, // Coordenades en canvas
+            this.pos_x*cell, this.pos_y*cell, // Coordenades en canvas
             this.w/70*cell, this.h/70*cell // Dimensiones en canvas
         ) 
     }
